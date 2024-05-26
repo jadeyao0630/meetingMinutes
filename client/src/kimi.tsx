@@ -2,6 +2,7 @@ import React, { useState,useRef } from 'react';
 const FileUpload: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [reslut, setReslut] = useState<string>();
+  const [message, setMessage] = useState<string>('请根据文件里对话内容整理一份详细的会议纪要');
   const ref = useRef<HTMLDivElement>(null);
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -9,12 +10,15 @@ const FileUpload: React.FC = () => {
       setSelectedFile(file);
     }
   };
-
+  const handleMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value)
+    setMessage(event.target.value)
+  };
   const handleUpload = async () => {
     if (selectedFile) {
       const formData = new FormData();
       formData.append('file', selectedFile);
-      formData.append('chatMessage', '请根据文件里对话内容整理一份详细的会议纪要');
+      formData.append('chatMessage', message);
       // 发送文件到后端
       // fetch 或者 axios 等方法发送文件给后端
       try {
@@ -46,6 +50,7 @@ const FileUpload: React.FC = () => {
     <div>
       <input type="file" onChange={handleFileChange} />
       <button onClick={handleUpload}>上传文件</button>
+      <input type="text" onChange={handleMessageChange} />
       <div ref={ref} style={{ whiteSpace: 'pre-line' ,textAlign:'left'}}>{reslut}</div>
     </div>
   );
